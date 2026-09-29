@@ -20,7 +20,7 @@ const fmt = (n) => Math.floor(n).toLocaleString('fr-FR')
     <p class="center big">{{ fmt(store.state.cookies) }} cookies</p>
     <button class="cookie" @click="store.dispatch('click')">Cliquer</button>
 
-    <!-- Statistiques : getters -->
+
     <p class="center">
       Production : {{ fmt(store.getters.perSecond) }} /s |
       Par clic : {{ fmt(store.getters.clickPower) }} |

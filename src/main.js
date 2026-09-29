@@ -6,5 +6,5 @@ const app = createApp(App)
 app.use(store)
 app.mount('#app')
 
-// Demarre la production automatique (action du store)
+
 store.dispatch('startAutoProduction')

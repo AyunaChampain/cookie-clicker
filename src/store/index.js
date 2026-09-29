@@ -15,7 +15,7 @@ const fresh = () => ({
   levels: { clicker: 0, ouvrier: 0, equipe: 0, usine: 0 }
 })
 
-// ----- Stockage des comptes (localStorage) -----
+
 const KEY = 'cc_users'
 const readUsers = () => {
   try { return JSON.parse(localStorage.getItem(KEY)) || {} } catch { return {} }
@@ -34,7 +34,7 @@ function initialUsers() {
 let timer = null
 
 export default createStore({
-  // ---------- STATE ----------
+
   state: () => ({
     ...fresh(),              // cookies, total, autoProduction, multiplier, levels
     user: null,
@@ -43,7 +43,7 @@ export default createStore({
     challenge: null
   }),
 
-  // ---------- GETTERS : statistiques ----------
+
   getters: {
     factor: (s) => 2 ** s.multiplier,
     perSecond: (s, g) => s.autoProduction * g.factor,
@@ -63,7 +63,6 @@ export default createStore({
     challengeWon: (s) => !!s.challenge && s.total > s.challenge.target
   },
 
-  // ---------- MUTATIONS : seules a modifier le state ----------
   mutations: {
     ADD_COOKIES(s, n) { s.cookies += n; s.total += n },
     BUY_UPGRADE(s, { id, cost, cps }) { s.cookies -= cost; s.levels[id]++; s.autoProduction += cps },
@@ -74,7 +73,7 @@ export default createStore({
     SET_CHALLENGE(s, c) { s.challenge = c }
   },
 
-  // ---------- ACTIONS : logique du jeu ----------
+
   actions: {
     click({ commit, getters }) {
       commit('ADD_COOKIES', getters.clickPower)
@@ -88,7 +87,7 @@ export default createStore({
     buyMultiplier({ state, getters, commit }) {
       if (state.cookies >= getters.multiplierCost) commit('BUY_MULTIPLIER', getters.multiplierCost)
     },
-    // Production automatique : +perSecond cookies chaque seconde
+
     startAutoProduction({ state, getters, commit }) {
       if (timer) return
       timer = setInterval(() => {
@@ -96,7 +95,6 @@ export default createStore({
       }, 1000)
     },
 
-    // ----- Utilisateurs (retournent un message d'erreur, ou '' si OK) -----
     register({ dispatch }, { name, pw }) {
       if (!/^[\w-]{2,15}$/.test(name)) return 'Pseudo : 2 a 15 caracteres (lettres, chiffres, _ -).'
       if (!pw) return 'Mot de passe requis.'
@@ -128,12 +126,12 @@ export default createStore({
       commit('SET_GAME', readUsers()[state.user].save)
     },
 
-    // ----- Defi -----
+
     challenge({ state, commit }, name) {
       commit('SET_CHALLENGE', { name, target: Math.floor(state.users[name].save.total || 0) })
     },
 
-    // ----- Admin -----
+
     adminSetScore({ state, getters, commit }, { name, value }) {
       if (!getters.isAdmin) return
       const users = readUsers()
